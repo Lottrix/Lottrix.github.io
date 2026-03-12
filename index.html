@@ -127,8 +127,6 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   padding:15px;
   border-radius:15px;
 }
-
-/* NEU: Finale Animation ÜBER den Karten */
 .final-animation{
   position:absolute;
   top:0;
@@ -169,7 +167,6 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   text-shadow: 0 0 30px #ffd700, 0 0 50px #ff6b6b;
   letter-spacing:0.1em;
 }
-
 .gift-img{
   max-width:100%;
   height:auto;
@@ -200,7 +197,8 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
     <div class="slide-container" id="gallery"></div>
     <div class="dots" id="dots"></div>
 
-    <button onclick="startGame()" style="margin-top:30px;">Geschenk öffnen! 🎁</button>
+    <!-- NEU: Button erst am Ende sichtbar -->
+    <button id="giftButton" onclick="startGame()" class="hidden" style="margin-top:30px;">Geschenk öffnen! 🎁</button>
   </div>
 
   <div id="game" class="hidden game-container">
@@ -210,7 +208,6 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
       ❤️ Unser Geheimnis...
     </p>
     
-    <!-- NEU: Container für Animation über Karten -->
     <div style="position:relative;">
       <div class="memory-grid" id="memoryGrid"></div>
       <div id="finalAnim" class="final-animation hidden"></div>
@@ -224,7 +221,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 </div>
 
 <script>
-// Slideshow (unverändert)
+// Slideshow
 const slides = [
   {img: 'Bild1.jpeg', text: 'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
   {img: 'Bild2.jpeg', text: 'Der erste Sonnenuntergang zusammen'},
@@ -247,6 +244,7 @@ function showTrip(){
   document.getElementById('start').classList.add('hidden');
   document.getElementById('trip').classList.remove('hidden');
   initGallery();
+  // Button erst nach letztem Slide sichtbar machen
   slideInterval = setInterval(nextSlide, 10000);
 }
 
@@ -278,6 +276,14 @@ function updateSlides(){
   const dotElems = document.querySelectorAll('.dot');
   slideDivs.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
   dotElems.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  
+  // NEU: Nach letztem Slide Button zeigen
+  const giftButton = document.getElementById('giftButton');
+  if(currentSlide === slides.length - 1){
+    setTimeout(() => {
+      giftButton.classList.remove('hidden');
+    }, 500); // Leicht verzögert für smoothen Übergang
+  }
 }
 
 function nextSlide(){
@@ -392,7 +398,6 @@ function showFinalAnimation(){
   const finalAnim = document.getElementById('finalAnim');
   const gameStatus = document.getElementById('gameStatus');
   
-  // Animation ÜBER den Karten starten
   finalAnim.innerHTML = '<div class="pop-animation">Was wird!</div>';
   finalAnim.classList.remove('hidden');
   
@@ -402,7 +407,7 @@ function showFinalAnimation(){
       🎉 Alle Paare gefunden!<br>
       Hier ist dein Geschenk:
       <br><br>
-      <img src="Bild1.jpeg" class="gift-img" alt="Dein Gutschein">
+      <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
     `;
     document.getElementById('resetBtn').classList.remove('hidden');
   }, 2500);
@@ -411,7 +416,10 @@ function showFinalAnimation(){
 function resetGame(){
   document.getElementById('game').classList.add('hidden');
   document.getElementById('trip').classList.remove('hidden');
+  document.getElementById('giftButton').classList.add('hidden'); // Button wieder verstecken
   slideInterval = setInterval(nextSlide, 10000);
+  currentSlide = 0; // Slideshow von vorne starten
+  updateSlides();
 }
 </script>
 </body>
