@@ -6,81 +6,144 @@
 <title>Unser Wochenendtrip ❤️</title>
 <style>
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#667eea,#764ba2);
-color:white;
-text-align:center;
-min-height:100vh;
-padding:20px;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+  text-align:center;
+  min-height:100vh;
+  padding:20px;
 }
 .container{
-max-width:800px;
-margin:0 auto;
-padding:30px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-border-radius:20px;
-box-shadow:0 20px 40px rgba(0,0,0,0.3);
+  max-width:800px;
+  margin:0 auto;
+  padding:30px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
 h1{font-size:clamp(2rem,6vw,3rem);margin-bottom:20px;}
 p{font-size:1.2rem;line-height:1.6;margin-bottom:20px;}
 button{
-padding:15px 30px;border:none;border-radius:30px;font-size:18px;cursor:pointer;
-background:white;color:#764ba2;margin:20px;font-weight:600;transition:all 0.3s;box-shadow:0 8px 20px rgba(255,255,255,0.3);
+  padding:15px 30px;border:none;border-radius:30px;font-size:18px;cursor:pointer;
+  background:white;color:#764ba2;margin:20px;font-weight:600;transition:all 0.3s;box-shadow:0 8px 20px rgba(255,255,255,0.3);
 }
 button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,0.4);}
 .hidden{display:none;}
-.slide-container{position:relative;height:400px;overflow:hidden;margin:20px 0;}
-.slide-img{position:absolute;top:0;left:50%;transform:translateX(-50%);max-height:100%;max-width:90%;object-fit:contain;border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
-.slide-text{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);padding:15px 25px;border-radius:20px;font-size:1.1rem;max-width:90%;}
+.slide-container{
+  position:relative;
+  height:400px;
+  overflow:hidden;
+  margin:20px 0;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  display:none;
+}
+.slide.active{
+  display:block;
+}
+.slide-img{
+  max-height:100%;
+  max-width:90%;
+  object-fit:contain;
+  border-radius:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+.slide-text{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.7);
+  padding:15px 25px;
+  border-radius:20px;
+  font-size:1.1rem;
+  max-width:90%;
+}
 .dots{display:flex;justify-content:center;gap:10px;margin:20px 0;}
 .dot{width:14px;height:14px;border-radius:50%;background:#fff;opacity:0.6;cursor:pointer;transition:all 0.3s;}
 .dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
-/* Spiel */
+/* Neues Spiel – Herz-Klick-Spiel */
 .game-container{margin:30px 0;}
-.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;max-width:600px;margin:0 auto;}
-.memory-card{width:120px;height:160px;background:#fff;border-radius:12px;cursor:pointer;position:relative;box-shadow:0 8px 20px rgba(0,0,0,0.3);transition:transform 0.4s;}
-.memory-card.flipped{transform:rotateY(180deg);}
-.card-back{background:linear-gradient(135deg,#ff6b6b,#4ecdc4);border-radius:12px;}
-.card-front{text-align:center;padding-top:20px;font-size:1.4rem;font-weight:bold;color:#333;}
+.hearts-area{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin:20px 0;
+}
+.heart-btn{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,0.9);
+  color:#ff3366;
+  font-size:2rem;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+  transition:transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.heart-btn.clicked{
+  background:#ffd6e6;
+  transform:scale(0.9);
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
 .game-text{font-size:1.3rem;margin:20px;}
-.winner{color:#ffd700;font-size:1.5rem;}
-@media (max-width:480px){.memory-grid{grid-template-columns:repeat(3,90px);gap:10px;}.memory-card{width:90px;height:120px;}}
+.progress{
+  font-size:1.2rem;
+  margin-top:10px;
+}
+.gift-img{
+  max-width:100%;
+  height:auto;
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  margin:20px 0;
+}
+@media (max-width:480px){
+  .slide-container{height:300px;}
+}
 </style>
 </head>
 <body>
 <div class="container">
-<div id="start">
-<h1>🎉 Eine kleine Überraschung ❤️</h1>
-<p>Dieses Wochenende wartet ein kleines Abenteuer auf uns.</p>
-<button onclick="showTrip()">Zeig mir mehr →</button>
-</div>
+  <div id="start">
+    <h1>🎉 Eine kleine Überraschung ❤️</h1>
+    <p>Dieses Wochenende wartet ein kleines Abenteuer auf uns.</p>
+    <button onclick="showTrip()">Zeig mir mehr →</button>
+  </div>
 
-<div id="trip" class="hidden">
-<h1>🌟 Wochenendtrip KW 16</h1>
-<p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
-<p>Ich freue mich unglaublich auf die Zeit mit dir ❤️</p>
+  <div id="trip" class="hidden">
+    <h1>🌟 Wochenendtrip KW 16</h1>
+    <p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
+    <p>Ich freue mich unglaublich auf die Zeit mit dir ❤️</p>
 
-<div class="slide-container" id="gallery">
-<!-- 10 Bilder + Texte werden per JS gefüllt -->
-</div>
-<div class="dots" id="dots"></div>
+    <div class="slide-container" id="gallery"></div>
+    <div class="dots" id="dots"></div>
 
-<button onclick="startGame()" style="margin-top:30px;">Geschenk öffnen! 🎁</button>
-</div>
+    <button onclick="startGame()" style="margin-top:30px;">Geschenk öffnen! 🎁</button>
+  </div>
 
-<div id="game" class="hidden game-container">
-<h1>🧠 Memory-Spiel für dein Geschenk</h1>
-<p class="game-text">Finde alle 3 Herz-Paare (6 Karten). Klick auf zwei Karten zum Paar!</p>
-<div class="memory-grid" id="memoryGrid"></div>
-<p id="gameStatus" class="game-text"></p>
-<button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
-</div>
+  <div id="game" class="hidden game-container">
+    <h1>💘 Sammle unsere Herzen</h1>
+    <p class="game-text">
+      Klicke auf die Herzen, bis du genug gesammelt hast.<br>
+      Jeder Klick = ein Herz-Moment mit uns.
+    </p>
+    <div class="hearts-area" id="heartsArea"></div>
+    <p id="progressText" class="progress"></p>
+    <p id="gameStatus" class="game-text"></p>
+    <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal schauen</button>
+  </div>
 </div>
 
 <script>
+// ----- Slideshow -----
 const slides = [
   {img: 'Bild1.jpeg', text: 'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
   {img: 'Bild2.jpeg', text: 'Der erste Sonnenuntergang zusammen'},
@@ -96,113 +159,125 @@ const slides = [
 
 let currentSlide = 0;
 let slideInterval;
-let gameWon = false;
 
 function showTrip(){
-document.getElementById('start').classList.add('hidden');
-document.getElementById('trip').classList.remove('hidden');
-initGallery();
-slideInterval = setInterval(nextSlide, 10000); // 10 Sek.
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('trip').classList.remove('hidden');
+  initGallery();
+  slideInterval = setInterval(nextSlide, 10000); // alle 10 s
 }
 
 function initGallery(){
-const container = document.getElementById('gallery');
-const dots = document.getElementById('dots');
-container.innerHTML = '';
-slides.forEach((slide, index) => {
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <img class="slide-img ${index===0 ? 'active' : ''}" src="${slide.img}" alt="${slide.text}">
-    <div class="slide-text ${index===0 ? 'active' : ''}">${slide.text}</div>
-  `;
-  container.appendChild(div);
-  
-  const dot = document.createElement('span');
-  dot.classList.add('dot');
-  if(index === 0) dot.classList.add('active');
-  dot.onclick = () => goToSlide(index);
-  dots.appendChild(dot);
-});
+  const container = document.getElementById('gallery');
+  const dots = document.getElementById('dots');
+  container.innerHTML = '';
+  dots.innerHTML = '';
+
+  slides.forEach((slide, index) => {
+    const slideDiv = document.createElement('div');
+    slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
+    slideDiv.innerHTML = `
+      <img class="slide-img" src="${slide.img}" alt="${slide.text}">
+      <div class="slide-text">${slide.text}</div>
+    `;
+    container.appendChild(slideDiv);
+
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    if(index === 0) dot.classList.add('active');
+    dot.onclick = () => goToSlide(index);
+    dots.appendChild(dot);
+  });
+}
+
+function updateSlides(){
+  const slideDivs = document.querySelectorAll('.slide-container .slide');
+  const dotElems = document.querySelectorAll('.dot');
+  slideDivs.forEach((s, i) => {
+    s.classList.toggle('active', i === currentSlide);
+  });
+  dotElems.forEach((d, i) => {
+    d.classList.toggle('active', i === currentSlide);
+  });
 }
 
 function nextSlide(){
-currentSlide = (currentSlide + 1) % slides.length;
-goToSlide(currentSlide);
+  currentSlide = (currentSlide + 1) % slides.length;
+  updateSlides();
 }
 
 function goToSlide(index){
-currentSlide = index;
-document.querySelectorAll('.slide-container > div').forEach((slide, i) => {
-  slide.querySelector('.slide-img').classList.toggle('active', i === index);
-  slide.querySelector('.slide-text').classList.toggle('active', i === index);
-});
-document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === index));
+  currentSlide = index;
+  updateSlides();
 }
+
+// ----- Neues Spiel: Herz-Klick-Spiel -----
+let heartsCollected = 0;
+const heartsTarget = 10; // wie viele Herzen „gesammelt“ werden sollen
 
 function startGame(){
-document.getElementById('trip').classList.add('hidden');
-document.getElementById('game').classList.remove('hidden');
-initMemoryGame();
+  document.getElementById('trip').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  clearInterval(slideInterval);
+  initHeartGame();
 }
 
-function initMemoryGame(){
-gameWon = false;
-const grid = document.getElementById('memoryGrid');
-const hearts = Array(3).fill().flatMap(() => ['❤️', '❤️']);
-const symbols = ['⭐', '🌟', '💫'];
-const cards = [...hearts, ...symbols].sort(() => Math.random() - 0.5);
+function initHeartGame(){
+  heartsCollected = 0;
+  const area = document.getElementById('heartsArea');
+  const progressText = document.getElementById('progressText');
+  const gameStatus = document.getElementById('gameStatus');
+  const resetBtn = document.getElementById('resetBtn');
 
-grid.innerHTML = '';
-cards.forEach((symbol, index) => {
-  const card = document.createElement('div');
-  card.className = 'memory-card';
-  card.dataset.symbol = symbol;
-  card.dataset.index = index;
-  card.innerHTML = `
-    <div class="card-back"></div>
-    <div class="card-front">${symbol}</div>
+  area.innerHTML = '';
+  gameStatus.textContent = '';
+  resetBtn.classList.add('hidden');
+
+  // 12 Herzen zum Anklicken
+  for(let i = 0; i < 12; i++){
+    const btn = document.createElement('button');
+    btn.className = 'heart-btn';
+    btn.innerHTML = '❤️';
+    btn.addEventListener('click', () => clickHeart(btn));
+    area.appendChild(btn);
+  }
+
+  progressText.textContent = `Gesammelte Herzen: ${heartsCollected} / ${heartsTarget}`;
+}
+
+function clickHeart(btn){
+  if(btn.classList.contains('clicked')) return; // doppelt klicken verhindert
+  if(heartsCollected >= heartsTarget) return;
+
+  btn.classList.add('clicked');
+  heartsCollected++;
+  const progressText = document.getElementById('progressText');
+  progressText.textContent = `Gesammelte Herzen: ${heartsCollected} / ${heartsTarget}`;
+
+  if(heartsCollected === heartsTarget){
+    winGame();
+  }
+}
+
+function winGame(){
+  const gameStatus = document.getElementById('gameStatus');
+  const resetBtn = document.getElementById('resetBtn');
+
+  gameStatus.innerHTML = `
+    🎉 Geschafft!<br>
+    Du hast genug Herzen gesammelt – hier ist dein Geschenk:
+    <br><br>
+    <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
   `;
-  card.addEventListener('click', flipCard);
-  grid.appendChild(card);
-});
-document.getElementById('gameStatus').textContent = 'Finde die 3 Herz-Paare!';
-}
-
-let flippedCards = [];
-function flipCard(e){
-if(flippedCards.length < 2 && !this.classList.contains('flipped') && !gameWon){
-  this.classList.add('flipped');
-  flippedCards.push(this);
-  
-  if(flippedCards.length === 2){
-    setTimeout(checkMatch, 1000);
-  }
-}
-}
-
-function checkMatch(){
-const [card1, card2] = flippedCards;
-if(card1.dataset.symbol === card2.dataset.symbol){
-  // Match!
-  if(document.querySelectorAll('.memory-card.flipped').length === 6){
-    gameWon = true;
-    document.getElementById('gameStatus').innerHTML = '🎉 Gewonnen! <br> Dein Geschenk: <img src="Bild11.jpeg" style="max-width:100%;border-radius:15px;margin-top:20px;"><br><img src="Bild12.jpeg"><br><img src="Bild13.jpeg">';
-    document.getElementById('resetBtn').classList.remove('hidden');
-  }
-} else {
-  // No match
-  card1.classList.remove('flipped');
-  card2.classList.remove('flipped');
-}
-flippedCards = [];
+  resetBtn.classList.remove('hidden');
 }
 
 function resetGame(){
-document.getElementById('game').classList.add('hidden');
-document.getElementById('trip').classList.remove('hidden');
-clearInterval(slideInterval);
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('trip').classList.remove('hidden');
+  // Slideshow nach Reset wieder starten
+  slideInterval = setInterval(nextSlide, 10000);
 }
 </script>
 </body>
 </html>
-
