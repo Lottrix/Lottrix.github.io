@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -68,7 +69,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 .dot{width:14px;height:14px;border-radius:50%;background:#fff;opacity:0.6;cursor:pointer;transition:all 0.3s;}
 .dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
-/* Perfektes Memory – nur Rückseite sichtbar! */
+/* Memory-Verbesserungen */
 .game-container{margin:30px 0;}
 .memory-grid{
   display:grid;
@@ -90,8 +91,9 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   transform:rotateY(180deg);
 }
 .memory-card.matched{
-  opacity:0.5;
+  opacity:0.3; /* Dunkel werden */
   cursor:default;
+  background: rgba(0,0,0,0.7) !important;
 }
 .card-face{
   position:absolute;
@@ -115,6 +117,26 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 }
 .game-text{font-size:1.3rem;margin:20px;}
 .progress{font-size:1.2rem;margin-top:10px;}
+.sentence-progress{
+  font-size:1.4rem;
+  font-weight:bold;
+  margin:20px 0;
+  min-height:40px;
+  background:rgba(255,255,255,0.2);
+  padding:15px;
+  border-radius:15px;
+}
+@keyframes popIn {
+  0% { transform: scale(0); opacity:0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity:1; }
+}
+.pop-animation {
+  animation: popIn 1s ease-out;
+  font-size:2.5rem !important;
+  font-weight:bold !important;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+}
 .gift-img{
   max-width:100%;
   height:auto;
@@ -156,6 +178,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
     </p>
     <div class="memory-grid" id="memoryGrid"></div>
     <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
+    <div id="sentenceProgress" class="sentence-progress">Satz: </div>
     <p id="gameStatus" class="game-text"></p>
     <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
   </div>
@@ -178,6 +201,10 @@ const slides = [
 
 let currentSlide = 0;
 let slideInterval;
+
+// NEU: Satz-Wörter
+const sentenceWords = ["Wir", "freuen", "uns,", "schau", "mer", "mal", "was", "wird."];
+let foundWords = [];
 
 function showTrip(){
   document.getElementById('start').classList.add('hidden');
@@ -226,7 +253,7 @@ function goToSlide(index){
   updateSlides();
 }
 
-// ----- Fix: Nur Rückseite sichtbar -----
+// ----- Memory Game mit neuen Features -----
 let flippedCards = [];
 let matchedPairs = 0;
 let lockBoard = false;
@@ -241,10 +268,12 @@ function startGame(){
 
 function initMemoryGame(){
   matchedPairs = 0;
+  foundWords = [];
   flippedCards = [];
   lockBoard = false;
   const grid = document.getElementById('memoryGrid');
   const progressText = document.getElementById('progressText');
+  const sentenceProgress = document.getElementById('sentenceProgress');
   const gameStatus = document.getElementById('gameStatus');
   const resetBtn = document.getElementById('resetBtn');
 
@@ -265,6 +294,7 @@ function initMemoryGame(){
   });
 
   progressText.textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
+  sentenceProgress.textContent = 'Satz: ';
   gameStatus.textContent = '';
   resetBtn.classList.add('hidden');
 }
@@ -290,11 +320,17 @@ function checkMatch(){
     matchedPairs++;
     document.getElementById('progressText').textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
     
+    // NEU: Wort hinzufügen (jedes Paar = 1 Wort)
+    if(foundWords.length < sentenceWords.length){
+      foundWords.push(sentenceWords[foundWords.length]);
+      updateSentenceProgress();
+    }
+    
     flippedCards = [];
     lockBoard = false;
     
     if(matchedPairs === totalPairs){
-      setTimeout(winGame, 500);
+      setTimeout(showFinalAnimation, 800);
       return;
     }
   } else {
@@ -307,16 +343,26 @@ function checkMatch(){
   }
 }
 
-function winGame(){
+function updateSentenceProgress(){
+  const sentenceProgress = document.getElementById('sentenceProgress');
+  const sentenceText = foundWords.join(' ');
+  sentenceProgress.textContent = `Satz: ${sentenceText}`;
+  sentenceProgress.style.color = foundWords.length === sentenceWords.length ? '#ffd700' : 'white';
+}
+
+function showFinalAnimation(){
   const gameStatus = document.getElementById('gameStatus');
-  const resetBtn = document.getElementById('resetBtn');
-  gameStatus.innerHTML = `
-    🎉 Alle Paare gefunden!<br>
-    Hier ist dein Geschenk:
-    <br><br>
-    <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
-  `;
-  resetBtn.classList.remove('hidden');
+  gameStatus.innerHTML = '<div class="pop-animation">Was wird!</div>';
+  
+  setTimeout(() => {
+    gameStatus.innerHTML = `
+      🎉 Alle Paare gefunden!<br>
+      Hier ist dein Geschenk:
+      <br><br>
+      <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
+    `;
+    document.getElementById('resetBtn').classList.remove('hidden');
+  }, 2000);
 }
 
 function resetGame(){
