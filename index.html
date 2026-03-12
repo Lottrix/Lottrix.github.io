@@ -51,6 +51,12 @@ border-radius:15px;
 margin-top:15px;
 box-shadow:0 15px 30px rgba(0,0,0,0.4);
 }
+.gallery {position:relative;height:250px;overflow:hidden;margin-top:20px;}
+.gallery img {position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease-in-out;}
+.gallery img.active {opacity:1;}
+.gallery-dots {display:flex;justify-content:center;gap:10px;margin-top:15px;}
+.dot {width:12px;height:12px;border-radius:50%;background:#fff;opacity:0.5;cursor:pointer;transition:opacity 0.3s;}
+.dot.active {opacity:1;background:#764ba2;}
 @media (max-width:480px){.container{padding:20px;}}
 </style>
 </head>
@@ -65,16 +71,61 @@ box-shadow:0 15px 30px rgba(0,0,0,0.4);
 <h1>🌟 Wochenendtrip KW 16</h1>
 <p>Nur wir zwei.<br>Ein Wochenende voller Erinnerungen.</p>
 <p>Ich freue mich unglaublich auf die Zeit mit dir ❤️</p>
-<img src="trip.jpg" alt="Unser Trip-Ziel" onerror="this.src='https://via.placeholder.com/400x250/764ba2/fff?text=Trip+Bild';">
+<div class="gallery">
+<img src="bild1.jpg" alt="Trip 1">
+<img src="bild2.jpg" alt="Trip 2">
+<img src="bild3.jpg" alt="Trip 3">
+<img src="bild4.jpg" alt="Trip 4">
+</div>
+<div class="gallery-dots"></div>
 </div>
 </div>
 <script>
+let currentSlide = 0;
+let slideInterval;
+
 function showTrip(){
 document.getElementById("start").style.display="none";
 document.getElementById("trip").style.display="block";
+startSlideshow();
 document.querySelector('h1').scrollIntoView({behavior:'smooth'});
 }
+
+function startSlideshow(){
+const gallery = document.querySelector('.gallery');
+const slides = gallery.querySelectorAll('img');
+const dotsContainer = document.querySelector('.gallery-dots');
+slides[0].classList.add('active');
+
+// Dots erstellen
+slides.forEach((_, index) => {
+  const dot = document.createElement('span');
+  dot.classList.add('dot');
+  if(index === 0) dot.classList.add('active');
+  dot.onclick = () => goToSlide(index);
+  dotsContainer.appendChild(dot);
+});
+
+slideInterval = setInterval(nextSlide, 3000); // 3 Sek. pro Bild
+}
+
+function nextSlide(){
+currentSlide = (currentSlide + 1) % 4; // 4 Bilder
+goToSlide(currentSlide);
+}
+
+function goToSlide(slideIndex){
+const slides = document.querySelectorAll('.gallery img');
+const dots = document.querySelectorAll('.dot');
+
+slides.forEach((slide, i) => {
+  slide.classList.toggle('active', i === slideIndex);
+});
+dots.forEach((dot, i) => {
+  dot.classList.toggle('active', i === slideIndex);
+});
+}
+
 </script>
 </body>
 </html>
-
