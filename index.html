@@ -67,13 +67,19 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   display:block;
 }
 .slide-text{
-  background:rgba(0,0,0,0.7);
-  padding:10px 20px;
+  background:rgba(0,0,0,0.65);
+  padding:12px 18px;
   border-radius:20px;
-  font-size:1rem;
-  max-width:90%;
-  margin:0;
-  flex-shrink:0;
+  font-size:clamp(0.95rem, 2.5vw, 1.1rem);
+  max-width:95%;
+  width:fit-content;
+  max-height:none;
+  margin:0 auto;
+  line-height:1.4;
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  box-sizing:border-box;
 }
 /* ===== ENDE DIASHOW ===== */
 
@@ -166,7 +172,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 
   <div id="trip" class="hidden">
     <h1>Alles gute zu deinem Geburtstag! ❤️</h1>
-    <p>Da wir jetzt schon fast ein altes Ehepaar sind bekommst du von mir einen kleinen Recap. Ich freu mich weitere Momente mit dir zu erschaffen</p>
+    <p>Da wir jetzt schon fast ein altes Ehepaar sind bekommst du von mir einen kleinen Recap. Ich freu mich weitere Momente mit dir zu erschaffen!</p>
     <div class="slide-container" id="gallery"></div>
     <div class="dots" id="dots"></div>
     <button id="giftButton" onclick="startGame()" class="hidden" style="margin-top:30px;">Spiel beginnen! 🎁</button>
@@ -200,7 +206,7 @@ const slides = [
   {img:'Bild6.jpeg', text:'zwischendurch sport gemacht,'},
   {img:'Bild7.jpeg', text:'getanzt,'},
   {img:'Bild8.jpeg', text:'Stahlbauten angeschaut'},
-  {img:'Bild9.jpeg', text:'und das ein odere andere Kaltgetränk geschlürft'},
+  {img:'Bild9.jpeg', text:'und das ein odere andere Kaltgetränk geschlürft.'},
   {img:'Bild10.jpeg', text:'Da bekommt sogar Linus Bock!'},
   {img:'Bild11.jpeg',text:'Du auch? Dann starte das Spiel!❤️'}
 ];
