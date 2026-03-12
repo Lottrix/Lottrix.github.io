@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -65,7 +66,7 @@ button:hover{
 
 .slide-container{
   position:relative;
-  height:600px;
+  height:650px;
   overflow:hidden;
   margin:20px 0;
 }
@@ -77,7 +78,7 @@ button:hover{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:15px;
 }
 
 .slide.active{
@@ -86,7 +87,7 @@ button:hover{
 
 .slide-img{
   width:100%;
-  height:100%;
+  height:80%;
   object-fit:contain;
   border-radius:15px;
   box-shadow:0 20px 40px rgba(0,0,0,0.4);
@@ -252,7 +253,11 @@ button:hover{
   }
 
   .slide-container{
-    height:380px;
+    height:450px;
+  }
+
+  .slide-img{
+    height:75%;
   }
 
 }
@@ -284,39 +289,11 @@ Geschenk öffnen! 🎁
 
 </div>
 
-<div id="game" class="hidden game-container">
-
-<h1>🧠 Memory – Nur Rückseiten!</h1>
-
-<p class="game-text">
-Klicke zwei gleiche Karten. Symbole nur 1 Sek sichtbar!<br>
-❤️ Unser Geheimnis...
-</p>
-
-<div style="position:relative;">
-<div class="memory-grid" id="memoryGrid"></div>
-<div id="finalAnim" class="final-animation hidden"></div>
-</div>
-
-<p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
-
-<div id="sentenceProgress" class="sentence-progress"></div>
-
-<p id="gameStatus" class="game-text"></p>
-
-<button onclick="resetGame()" class="hidden" id="resetBtn">
-Nochmal spielen
-</button>
-
-</div>
 </div>
 
 <script>
 
-/* Slideshow */
-
 const slides = [
-
 {img:'Bild1.jpeg', text:'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
 {img:'Bild2.jpeg', text:'Der erste Sonnenuntergang zusammen'},
 {img:'bild3.jpg', text:'Unser Lieblingsmoment am See'},
@@ -327,52 +304,42 @@ const slides = [
 {img:'Bild8.jpeg', text:'Lachen bis der Bauch weh tut'},
 {img:'Bild9.jpeg', text:'Der Moment, der alles perfekt machte'},
 {img:'Bild10.jpeg', text:'Bis bald – nächstes Abenteuer wartet! 💕'}
-
 ];
 
 let currentSlide = 0;
 let slideInterval;
 
 function showTrip(){
-
-document.getElementById('start').classList.add('hidden');
-document.getElementById('trip').classList.remove('hidden');
-
-initGallery();
-
-slideInterval = setInterval(nextSlide,10000);
-
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('trip').classList.remove('hidden');
+  initGallery();
+  slideInterval = setInterval(nextSlide,10000);
 }
 
 function initGallery(){
 
-const container = document.getElementById('gallery');
-const dots = document.getElementById('dots');
+const container=document.getElementById('gallery');
+const dots=document.getElementById('dots');
 
 container.innerHTML='';
 dots.innerHTML='';
 
 slides.forEach((slide,index)=>{
 
-const slideDiv = document.createElement('div');
+const slideDiv=document.createElement('div');
+slideDiv.className='slide'+(index===0?' active':'');
 
-slideDiv.className = 'slide'+(index===0?' active':'');
-
-slideDiv.innerHTML = `
+slideDiv.innerHTML=`
 <img class="slide-img" src="${slide.img}">
 <div class="slide-text">${slide.text}</div>
 `;
 
 container.appendChild(slideDiv);
 
-const dot = document.createElement('span');
-
+const dot=document.createElement('span');
 dot.classList.add('dot');
-
 if(index===0) dot.classList.add('active');
-
-dot.onclick = ()=>goToSlide(index);
-
+dot.onclick=()=>goToSlide(index);
 dots.appendChild(dot);
 
 });
@@ -381,41 +348,32 @@ dots.appendChild(dot);
 
 function updateSlides(){
 
-const slideDivs = document.querySelectorAll('.slide');
-const dotElems = document.querySelectorAll('.dot');
+const slideDivs=document.querySelectorAll('.slide');
+const dotElems=document.querySelectorAll('.dot');
 
 slideDivs.forEach((s,i)=>s.classList.toggle('active',i===currentSlide));
 dotElems.forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
 
 if(currentSlide===slides.length-1){
-
 setTimeout(()=>{
-
 document.getElementById('giftButton').classList.remove('hidden');
-
 },500);
-
 }
 
 }
 
 function nextSlide(){
-
-currentSlide = (currentSlide+1)%slides.length;
-
+currentSlide=(currentSlide+1)%slides.length;
 updateSlides();
-
 }
 
 function goToSlide(index){
-
-currentSlide = index;
-
+currentSlide=index;
 updateSlides();
-
 }
 
 </script>
 
 </body>
 </html>
+
