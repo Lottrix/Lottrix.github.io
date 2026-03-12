@@ -190,7 +190,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   </div>
 
   <div id="trip" class="hidden">
-    <h1>🌟 Wochenendtrip KW 16</h1>
+    <h1>Unser Wochenendtrip ❤️</h1>
     <p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
     <p>Ich freue mich unglaublich auf die Zeit mit dir ❤️</p>
 
@@ -214,7 +214,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
     </div>
     
     <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
-    <div id="sentenceProgress" class="sentence-progress">Satz: </div>
+    <div id="sentenceProgress" class="sentence-progress"> </div>
     <p id="gameStatus" class="game-text"></p>
     <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
   </div>
@@ -237,7 +237,7 @@ const slides = [
 
 let currentSlide = 0;
 let slideInterval;
-const sentenceWords = ["Wir", "freuen", "uns,", "schau", "mer", "mal", "was", "wird."];
+const sentenceWords = ["Wir", "freuen uns,", "schau", "mer", "mal", "was wird."];
 let foundWords = [];
 
 function showTrip(){
@@ -407,7 +407,7 @@ function showFinalAnimation(){
       🎉 Alle Paare gefunden!<br>
       Hier ist dein Geschenk:
       <br><br>
-      <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
+      <img src="Bild1.jpeg" class="gift-img" alt="Dein Gutschein">
     `;
     document.getElementById('resetBtn').classList.remove('hidden');
   }, 2500);
