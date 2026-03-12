@@ -41,63 +41,78 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   position:absolute;
   inset:0;
   display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 .slide.active{
-  display:block;
+  display:flex;
 }
 .slide-img{
-  max-height:100%;
+  max-height:70%;
   max-width:90%;
   object-fit:contain;
   border-radius:15px;
   box-shadow:0 20px 40px rgba(0,0,0,0.4);
 }
 .slide-text{
-  position:absolute;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
   background:rgba(0,0,0,0.7);
   padding:15px 25px;
   border-radius:20px;
   font-size:1.1rem;
   max-width:90%;
+  margin:0;
 }
 .dots{display:flex;justify-content:center;gap:10px;margin:20px 0;}
 .dot{width:14px;height:14px;border-radius:50%;background:#fff;opacity:0.6;cursor:pointer;transition:all 0.3s;}
 .dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
-/* Neues Spiel – Herz-Klick-Spiel */
+/* Echtes Memory-Spiel */
 .game-container{margin:30px 0;}
-.hearts-area{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
   gap:15px;
-  margin:20px 0;
+  max-width:500px;
+  margin:20px auto;
 }
-.heart-btn{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  border:none;
-  background:rgba(255,255,255,0.9);
-  color:#ff3366;
-  font-size:2rem;
+.memory-card{
+  aspect-ratio:3/4;
+  background:linear-gradient(135deg,#ff6b6b,#4ecdc4);
+  border-radius:12px;
   cursor:pointer;
+  position:relative;
+  transition:transform 0.6s ease;
+  transform-style:preserve-3d;
   box-shadow:0 8px 20px rgba(0,0,0,0.3);
-  transition:transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
-.heart-btn.clicked{
-  background:#ffd6e6;
-  transform:scale(0.9);
-  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+.memory-card.flipped{
+  transform:rotateY(180deg);
+}
+.memory-card.matched{
+  opacity:0.5;
+  cursor:default;
+}
+.card-face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-size:2rem;
+}
+.card-back{
+  background:linear-gradient(135deg,#ff6b6b,#4ecdc4);
+}
+.card-front{
+  background:rgba(255,255,255,0.95);
+  font-weight:bold;
 }
 .game-text{font-size:1.3rem;margin:20px;}
-.progress{
-  font-size:1.2rem;
-  margin-top:10px;
-}
+.progress{font-size:1.2rem;margin-top:10px;}
 .gift-img{
   max-width:100%;
   height:auto;
@@ -106,6 +121,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   margin:20px 0;
 }
 @media (max-width:480px){
+  .memory-grid{grid-template-columns:repeat(4,70px);gap:10px;}
   .slide-container{height:300px;}
 }
 </style>
@@ -130,20 +146,20 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   </div>
 
   <div id="game" class="hidden game-container">
-    <h1>💘 Sammle unsere Herzen</h1>
+    <h1>🧠 Echtes Memory – Finde die Paare!</h1>
     <p class="game-text">
-      Klicke auf die Herzen, bis du genug gesammelt hast.<br>
-      Jeder Klick = ein Herz-Moment mit uns.
+      Alle Karten verdeckt. Klicke zwei gleiche Symbole!<br>
+      ❤️ + unsere Erinnerungen warten.
     </p>
-    <div class="hearts-area" id="heartsArea"></div>
-    <p id="progressText" class="progress"></p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
     <p id="gameStatus" class="game-text"></p>
-    <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal schauen</button>
+    <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
   </div>
 </div>
 
 <script>
-// ----- Slideshow -----
+// Slideshow (unverändert)
 const slides = [
   {img: 'Bild1.jpeg', text: 'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
   {img: 'Bild2.jpeg', text: 'Der erste Sonnenuntergang zusammen'},
@@ -164,7 +180,7 @@ function showTrip(){
   document.getElementById('start').classList.add('hidden');
   document.getElementById('trip').classList.remove('hidden');
   initGallery();
-  slideInterval = setInterval(nextSlide, 10000); // alle 10 s
+  slideInterval = setInterval(nextSlide, 10000);
 }
 
 function initGallery(){
@@ -193,12 +209,8 @@ function initGallery(){
 function updateSlides(){
   const slideDivs = document.querySelectorAll('.slide-container .slide');
   const dotElems = document.querySelectorAll('.dot');
-  slideDivs.forEach((s, i) => {
-    s.classList.toggle('active', i === currentSlide);
-  });
-  dotElems.forEach((d, i) => {
-    d.classList.toggle('active', i === currentSlide);
-  });
+  slideDivs.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+  dotElems.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
 }
 
 function nextSlide(){
@@ -211,61 +223,104 @@ function goToSlide(index){
   updateSlides();
 }
 
-// ----- Neues Spiel: Herz-Klick-Spiel -----
-let heartsCollected = 0;
-const heartsTarget = 10; // wie viele Herzen „gesammelt“ werden sollen
+// ----- Echtes Memory (perfekt animiert) -----
+let flippedCards = [];
+let matchedPairs = 0;
+let lockBoard = false;
+const totalPairs = 6;
 
 function startGame(){
   document.getElementById('trip').classList.add('hidden');
   document.getElementById('game').classList.remove('hidden');
   clearInterval(slideInterval);
-  initHeartGame();
+  initMemoryGame();
 }
 
-function initHeartGame(){
-  heartsCollected = 0;
-  const area = document.getElementById('heartsArea');
+function initMemoryGame(){
+  matchedPairs = 0;
+  flippedCards = [];
+  lockBoard = false;
+  const grid = document.getElementById('memoryGrid');
   const progressText = document.getElementById('progressText');
   const gameStatus = document.getElementById('gameStatus');
   const resetBtn = document.getElementById('resetBtn');
 
-  area.innerHTML = '';
+  const symbols = ['❤️','❤️','🌹','🌹','💋','💋','💍','💍','🌅','🌅','🍦','🍦'];
+  symbols.sort(() => Math.random() - 0.5);
+
+  grid.innerHTML = '';
+  symbols.forEach((symbol) => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.dataset.symbol = symbol;
+    card.innerHTML = `
+      <div class="card-face card-back"></div>
+      <div class="card-face card-front">${symbol}</div>
+    `;
+    card.addEventListener('click', flipCard);
+    grid.appendChild(card);
+  });
+
+  progressText.textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
   gameStatus.textContent = '';
   resetBtn.classList.add('hidden');
-
-  // 12 Herzen zum Anklicken
-  for(let i = 0; i < 12; i++){
-    const btn = document.createElement('button');
-    btn.className = 'heart-btn';
-    btn.innerHTML = '❤️';
-    btn.addEventListener('click', () => clickHeart(btn));
-    area.appendChild(btn);
-  }
-
-  progressText.textContent = `Gesammelte Herzen: ${heartsCollected} / ${heartsTarget}`;
 }
 
-function clickHeart(btn){
-  if(btn.classList.contains('clicked')) return; // doppelt klicken verhindert
-  if(heartsCollected >= heartsTarget) return;
+function flipCard(){
+  if(lockBoard || this.classList.contains('flipped') || this.classList.contains('matched')) return;
 
-  btn.classList.add('clicked');
-  heartsCollected++;
-  const progressText = document.getElementById('progressText');
-  progressText.textContent = `Gesammelte Herzen: ${heartsCollected} / ${heartsTarget}`;
+  this.classList.add('flipped');
+  flippedCards.push(this);
 
-  if(heartsCollected === heartsTarget){
-    winGame();
+  if(flippedCards.length === 1){
+    // Erste Karte: 1 Sek sichtbar
+    setTimeout(() => {
+      if(flippedCards.length === 1){
+        flippedCards[0].classList.remove('flipped');
+        flippedCards = [];
+      }
+    }, 1000);
+  }
+
+  if(flippedCards.length === 2){
+    lockBoard = true;
+    checkMatch();
+  }
+}
+
+function checkMatch(){
+  const [card1, card2] = flippedCards;
+  
+  if(card1.dataset.symbol === card2.dataset.symbol){
+    card1.classList.add('matched');
+    card2.classList.add('matched');
+    matchedPairs++;
+    document.getElementById('progressText').textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
+    
+    flippedCards = [];
+    lockBoard = false;
+    
+    if(matchedPairs === totalPairs){
+      winGame();
+      return;
+    }
+  } else {
+    // Kein Match: Nach 1 Sek umdrehen
+    setTimeout(() => {
+      card1.classList.remove('flipped');
+      card2.classList.remove('flipped');
+      flippedCards = [];
+      lockBoard = false;
+    }, 1000);
   }
 }
 
 function winGame(){
   const gameStatus = document.getElementById('gameStatus');
   const resetBtn = document.getElementById('resetBtn');
-
   gameStatus.innerHTML = `
-    🎉 Geschafft!<br>
-    Du hast genug Herzen gesammelt – hier ist dein Geschenk:
+    🎉 Alle Paare gefunden!<br>
+    Hier ist dein Geschenk:
     <br><br>
     <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
   `;
@@ -275,9 +330,9 @@ function winGame(){
 function resetGame(){
   document.getElementById('game').classList.add('hidden');
   document.getElementById('trip').classList.remove('hidden');
-  // Slideshow nach Reset wieder starten
   slideInterval = setInterval(nextSlide, 10000);
 }
 </script>
 </body>
 </html>
+
